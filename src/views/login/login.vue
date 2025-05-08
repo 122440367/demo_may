@@ -1,16 +1,14 @@
 <template>
     <el-form class="login_form" :model="loginForm" :rules="rules" ref="loginForms">
-        <h1>Hello</h1>
-        <h2>Welcome to the System</h2>
+
         <el-form-item prop="username" :rules="rules.username">
-            <el-input :prefix-icon="User" v-model="loginForm.username" placeholder="UserName"></el-input>
+            <el-input v-model="loginForm.username" placeholder="UserName"></el-input>
         </el-form-item>
         <el-form-item prop="password" :rules="rules.password">
-            <el-input type="password" :prefix-icon="Lock" v-model="loginForm.password" show-password
-                placeholder="Password"></el-input>
+            <el-input type="password" v-model="loginForm.password"  placeholder="Password"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button :loading="loading" class="login_btn" type="primary" size="default"
+            <el-button  class="login_btn" type="primary" size="default"
                 @click="login()">登录</el-button>
         </el-form-item>
     </el-form>
@@ -24,6 +22,9 @@
 import { ElNotification } from 'element-plus';
 import { ref, reactive } from 'vue';
 import { reqLogin } from '../../api/user';
+import { useRouter } from 'vue-router';
+
+let router = useRouter();
 let loginForms = ref();
 let loginForm = reactive({
     username: '',
@@ -65,13 +66,10 @@ const login = async () => {
     await loginForms.value.validate();
 
     const result: unknown = await reqLogin(loginForm);
-
+    console.log(result);
     if (result.code === 200) {
-
-        ElNotification({
-            type: 'success',
-            message: result.msg,
-        })
+        localStorage.setItem('token', result.data);
+        router.push('/');
     } else {
         return Promise.reject(new Error(result.msg));
     }
