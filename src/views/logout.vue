@@ -1,13 +1,14 @@
 <template>
 
-登录成功
+    登录成功
 
+    <el-button type="primary" @click="logout()"> 退出登录</el-button>
 </template>
 
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'  
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
@@ -17,4 +18,10 @@ onMounted(() => {
         router.push('/login')
     }
 })
+
+
+const logout = () => {
+    localStorage.removeItem('token')
+    router.push('/login')
+}
 </script>
